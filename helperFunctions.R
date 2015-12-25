@@ -36,7 +36,6 @@ filterData<-function(data, selAttributes, cleanFlag){
 }
 
 cleanData<-function(data){
-  cols2Clean<-c("glucose","diastolic","triceps","insulin", "bmi","age")
   colNames<-colnames(data)
   for(col in colNames) {
     if(col %in% cols2Clean){
@@ -91,4 +90,12 @@ pairsPlot <- function (inData) {
   }
   
 }
+
+# output$predictorSlidersZZ<-renderUI({
+#   if(length(input$predictors)>0){
+#     for(colName in input$predictors){
+#       v<-sliderParams(colName)
+#       sliderInput(colName, colName, min=v$lo, max=v$hi, value=round(v$m,digits=2), step = v$step)
+#     }
+#   }})
 

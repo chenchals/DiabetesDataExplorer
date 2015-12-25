@@ -37,17 +37,32 @@ shinyUI(
                           ),#tabPanel#2of3
                           # Prediction
                           tabPanel(p(icon("?"), "Prediction"),
-                                   column(3,
-                                          wellPanel(
-                                            radioButtons(
-                                              "predict",
-                                              "Machine Learning:",
-                                              c("Logistic Regression" = "logistic", "Random Forrest" = "rf"))
-                                          )
+                                   wellPanel(
+                                     radioButtons(
+                                       "learning",
+                                       inline=TRUE,
+                                       width="100%",
+                                       "Machine Learning:",
+                                       c("Logistic Regression" = "logistic", "Random Forrest" = "rf"))
                                    ),
-                                   column(7,
-                                          plotOutput("xx")
+                                   column(width = 4,
+                                          wellPanel(
+                                            helpText("Choose values for selected predictors",
+                                                      "Others are not used"),
+                                            uiOutput("pregnant"),
+                                            uiOutput("glucose"),
+                                            uiOutput("diastolic"),
+                                            uiOutput("triceps"),
+                                            uiOutput("insulin"),
+                                            uiOutput("bmi"),
+                                            uiOutput("diabetes"),
+                                            uiOutput("age")
+                                          )
                                    )
+                                   #,
+                                   #                                    column(7,
+                                   #                                           verbatimTextOutput("dataSummaryXX")
+                                   #                                    )
                           )#tabPanel#3of3                          
                         ) #tabsetPanel
                       )#mainPanel

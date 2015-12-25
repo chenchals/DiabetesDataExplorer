@@ -6,6 +6,7 @@ library(rCharts)
 source("helperFunctions.R", local = TRUE)
 
 csvData <- loadData('data/pima-data.csv')
+cols2Clean<-c("glucose","diastolic","triceps","insulin", "bmi","age")
 colNames<-colnames(csvData)
 allPredictors<-colNames[-length(colNames)]
 #colDesc<-csvData.descriptions
@@ -19,30 +20,95 @@ shinyServer(function(input, output, session)
   selPredictors <- reactiveValues()
   selPredictors$values <- c()
   
-  # Create data vars checkbox
+  # Create UI Components data vars checkbox
   output$predictors <- renderUI({
     checkboxGroupInput('predictors', 'Predictors', allPredictors, selected=selPredictors$values)
   })
   
+  output$pregnant <- renderUI({
+    createSlider('pregnant', 'Pregnant', 1)
+  })
+  
+  output$glucose <- renderUI({
+    createSlider('glucose', 'Glucose', 1)
+  })
+  
+  output$diastolic <- renderUI({
+    createSlider('diastolic', 'Diastolic', 1)
+  })  
+  
+  output$insulin <- renderUI({
+    createSlider('triceps', 'Triceps', 1)
+  }) 
+  
+  output$triceps <- renderUI({
+    createSlider('insulin', 'Insulin', 1)
+  }) 
+  
+  output$age <- renderUI({
+    createSlider('age', 'Age', 1)
+  }) 
+  
+  output$bmi <- renderUI({
+    createSlider('bmi', 'BMI', 0)
+  }) 
+  
+  output$diabetes <- renderUI({
+    createSlider('diabetes', 'Diabetes', 0)
+  }) 
+  
+  
   observe({
     if(input$selectAllPredictors == TRUE) 
-    selPredictors$values <- allPredictors
+      selPredictors$values <- allPredictors
   })
   
   observe({
     if(input$selectAllPredictors== FALSE) 
-    selPredictors$values <- c()
+      selPredictors$values <- c()
   })
- 
+  
   observe({input$cleanFlag          
-           })
+  })
+  
+  ########################################
+  createSlider<-function(colName, label, isInt){
+    if(colName %in% input$predictors){
+      v<-sliderParams(colName, isInt)
+      s<-sliderInput(colName, colName, min=v$lo, max=v$hi, value=round(v$m,digits=2), step = v$step)
+      s
+    }
+  }
+  
+  sliderParams<-function(colName, isInt){
+    d<-data.filter()[colName]
+    v<-list()
+    m<-mean(d[,1],na.rm=TRUE)
+    sd<-sd(d[,1],na.rm=TRUE)
+    lo<-round(m-4*sd, digits=2)
+    lo[lo<0]=0
+    hi<-round(m+4*sd, digits=2)
+    if(isInt==1){
+      v$m<-ceiling(m)
+      v$lo<-ceiling(lo)
+      v$hi<-ceiling(hi)
+      v$step=1
+    }else{
+      v$m<-round(m,digits=2)
+      v$lo<-round(lo,digits=2)
+      v$hi<-round(hi,digits=2)
+      v$step=round((v$hi-v$lo)/20, digits=2)
+    }
+    v
+  }
+  
   
   ########################################
   # Dataset for Data tab
   data.filter <- reactive({
     filterData(csvData, input$predictors, input$cleanFlag)
   })
-    
+  
   # Prepare dataset 
   dataTable <- reactive({
     data.filter()
@@ -56,19 +122,16 @@ shinyServer(function(input, output, session)
     nPredictors<-dim(data)[2]-1
     nObs<-dim(data)[1]
     if(nPredictors>1 && nObs>0){
-       summary.data.frame(data[1:nPredictors])
+      summary.data.frame(data[1:nPredictors])
     }
   })
   
-#########################################
-# Render Plots
-
-# Pairs plot
- output$pairsPlot <- renderPlot({
-   print(pairsPlot (data.filter()))
- })
-#summary
-
-
-
+  #########################################
+  # Render Plots
+  
+  # Pairs plot
+  output$pairsPlot <- renderPlot({
+    print(pairsPlot (data.filter()))
+  })
+  
 })
