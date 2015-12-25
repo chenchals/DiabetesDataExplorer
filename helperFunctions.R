@@ -1,5 +1,4 @@
-library(dplyr)
-library(ggplot2)
+library(GGally)
 
 loadData<-function(pimaLocal){
   #load pima indians data
@@ -47,12 +46,27 @@ cleanData<-function(data){
   data
 }
 
-
-
 ############PLOTS##############
+pairsPlotCorr <- function (inData) {
+  nPredictors<-dim(inData)[2]-1
+  if(nPredictors>1){
+    cc<-complete.cases(inData)
+    data<-inData[cc,]
+    data$test[data$test==0]="Norm."
+    data$test[data$test==1]="Diab."
+    ggpairs(data = data, columns = c(1:nPredictors), 
+            colour="test", alpha=0.4,
+            params=list(corSize=4))     
+  }
+  else
+  {
+    cat(paste("Plotting when nPredictors =",nPredictors,"\n"))
+    plot(0, 0, axes=FALSE, frame.plot=FALSE, xlab = "", ylab="",cex=0.01, main = "Please select at least 2 predictors for plotting")    
+  }
+}
 
 pairsPlot <- function (inData) {
-
+  
   nPredictors<-dim(inData)[2]-1
   
   if(nPredictors>1){
@@ -67,7 +81,7 @@ pairsPlot <- function (inData) {
     cols[data$test=="Diabetic"] <- "red"
     pairs(data[1:nPredictors],col=cols, pch=20, cex=1)
     par(xpd=TRUE)
-    legend(-0.01, 0.9, as.vector(unique(data$test)),  
+    legend(-0.05, 1.03, as.vector(unique(data$test)),  
            fill=c("blue", "red"))
   }
   else
@@ -77,3 +91,4 @@ pairsPlot <- function (inData) {
   }
   
 }
+

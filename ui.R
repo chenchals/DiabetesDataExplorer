@@ -33,7 +33,7 @@ shinyUI(
                           ),#tabPanel#1of3
                           # Plots
                           tabPanel(p(icon("line-chart"), "Prepare"),
-                                   plotOutput("pairsPlot", width="90%", height="900px")
+                                   plotOutput("pairsPlot", width="85%", height="600px")
                           ),#tabPanel#2of3
                           # Prediction
                           tabPanel(p(icon("?"), "Prediction"),

@@ -1,7 +1,6 @@
 #Pima indians data explorer and Machine learning
 library(shiny)
 library(rCharts)
-library(xtable)
 
 # Load helper functions
 source("helperFunctions.R", local = TRUE)
@@ -54,8 +53,8 @@ shinyServer(function(input, output, session)
   
   output$dataSummary <- renderPrint({
     data<-data.filter()
-    nPredictors<-dim(csvData)[2]-1
-    nObs<-dim(csvData)[1]
+    nPredictors<-dim(data)[2]-1
+    nObs<-dim(data)[1]
     if(nPredictors>1 && nObs>0){
        summary.data.frame(data[1:nPredictors])
     }
