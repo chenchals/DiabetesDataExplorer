@@ -1,0 +1,30 @@
+---
+title: "Untitled"
+author: "Chenchal Subraveti"
+date: "December 24, 2015"
+output: html_document
+---
+
+### Diabetes explorer Pima Indians
+
+This application is based on UCI machine learning database.
+
+Dataset has been obtained from PIMA Indians Diabetes data:
+UCI Machine Learning Database:  https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data
+
+
+  Predictor   |   Predictor Description
+------------- | -------------------------------------------------------------------------
+pregnant      |   Number of times pregnant
+glucose       |   Plasma glucose concentration a 2 hours in an oral glucose tolerance test
+diastolic     |   Diastolic blood pressure (mm Hg)
+triceps       |   Triceps skin fold thickness (mm)
+insulin       |   2-Hour serum insulin (mu U/ml)
+bmi           |   Body mass index (weight in kg/(height in m)^2)
+diabetes      |   Diabetes pedigree function
+age           |   Age (years)
+test          |   Class variable (0 or 1))
+
+
+Source code is available on the [GitHub](https://github.com/...)
+
