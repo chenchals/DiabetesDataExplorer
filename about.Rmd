@@ -28,3 +28,4 @@ test          |   Class variable (0 or 1))
 
 Source code is available on the [GitHub](https://github.com/chenchals/DiabetesDataExplorer)
 
+Uses logistic regression model

@@ -65,9 +65,7 @@ pairsPlotCorr <- function (inData) {
 }
 
 pairsPlot <- function (inData) {
-  
   nPredictors<-dim(inData)[2]-1
-  
   if(nPredictors>1){
     cc<-complete.cases(inData)
     data<-inData[cc,]
@@ -91,11 +89,12 @@ pairsPlot <- function (inData) {
   
 }
 
-# output$predictorSlidersZZ<-renderUI({
-#   if(length(input$predictors)>0){
-#     for(colName in input$predictors){
-#       v<-sliderParams(colName)
-#       sliderInput(colName, colName, min=v$lo, max=v$hi, value=round(v$m,digits=2), step = v$step)
-#     }
-#   }})
+fitLogitModel<-function(inData){
+  nPredictors<-dim(inData)[2]-1
+  if(nPredictors > 0){
+    model<-glm(test~., data=inData, family=binomial(link=logit))
+    model
+  }
+  
+}
 

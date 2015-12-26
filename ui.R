@@ -5,7 +5,7 @@ library(rCharts)
 shinyUI(
   navbarPage("Diabetes Data Exploring and Analysis",
              tabPanel("Explore Data",
-                      sidebarPanel(
+                      sidebarPanel(width = 3,
                         wellPanel(
                           uiOutput("predictors")
                         ),
@@ -30,25 +30,23 @@ shinyUI(
                                    tags$style(type='text/css', '#dataSummary {background-color: rgba(255,255,255,0.10); color: blue; font-size: 10px;}'), 
                                    verbatimTextOutput("dataSummary"),
                                    dataTableOutput(outputId="dataTable")
-                          ),#tabPanel#1of3
-                          # Plots
+                          ),#Data#1of3
                           tabPanel(p(icon("line-chart"), "Prepare"),
                                    plotOutput("pairsPlot", width="85%", height="600px")
-                          ),#tabPanel#2of3
-                          # Prediction
+                          ),#Plots#2of3
                           tabPanel(p(icon("?"), "Prediction"),
                                    wellPanel(
                                      radioButtons(
                                        "learning",
                                        inline=TRUE,
                                        width="100%",
-                                       "Machine Learning:",
-                                       c("Logistic Regression" = "logistic", "Random Forrest" = "rf"))
+                                       "Model:",
+                                       c("Logistic Regression" = "logistic", "Random Forrest (not yet)" = "rf"))
                                    ),
                                    column(width = 4,
                                           wellPanel(
-                                            helpText("Choose values for selected predictors",
-                                                      "Others are not used"),
+                                            helpText("Selected Predictor(s) Values"),
+                                            uiOutput("predict"),
                                             uiOutput("pregnant"),
                                             uiOutput("glucose"),
                                             uiOutput("diastolic"),
@@ -58,12 +56,12 @@ shinyUI(
                                             uiOutput("diabetes"),
                                             uiOutput("age")
                                           )
+                                   ),
+                                   fluidRow(
+                                     uiOutput("predictFlow")
                                    )
-                                   #,
-                                   #                                    column(7,
-                                   #                                           verbatimTextOutput("dataSummaryXX")
-                                   #                                    )
-                          )#tabPanel#3of3                          
+                                   
+                          )#Prediction#3of3                          
                         ) #tabsetPanel
                       )#mainPanel
                       
@@ -75,3 +73,4 @@ shinyUI(
              )#tabPanel#2
   )
 )
+

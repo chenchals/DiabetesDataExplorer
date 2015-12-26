@@ -15,12 +15,12 @@ cleanFlag<-TRUE
 
 shinyServer(function(input, output, session) 
 {
-  
   # Define and initialize reactive values
   selPredictors <- reactiveValues()
   selPredictors$values <- c()
   
-  # Create UI Components data vars checkbox
+  #############################################  
+  # Create UI components reactively
   output$predictors <- renderUI({
     checkboxGroupInput('predictors', 'Predictors', allPredictors, selected=selPredictors$values)
   })
@@ -57,7 +57,24 @@ shinyServer(function(input, output, session)
     createSlider('diabetes', 'Diabetes', 0)
   }) 
   
+  output$predictFlow <-renderUI({
+    if(length(input$predictors) > 0){
+      column(7,
+             wellPanel(
+               tags$style(type='text/css', '#prediction {background-color: rgba(255,128,128,0.10); color: red; font-size: 20px;}'),                
+               helpText("Prediction for input values"),
+               verbatimTextOutput("prediction")
+             ),
+             wellPanel(
+               tags$style(type='text/css', '#modelSummary {background-color: rgba(255,255,255,0.10); color: blue; font-size: 11px;}'),                
+               helpText("Model results..."),
+               verbatimTextOutput("modelSummary")
+             )
+      )
+    }
+  })
   
+  ########################################  
   observe({
     if(input$selectAllPredictors == TRUE) 
       selPredictors$values <- allPredictors
@@ -68,15 +85,16 @@ shinyServer(function(input, output, session)
       selPredictors$values <- c()
   })
   
-  observe({input$cleanFlag          
-  })
+  observe({input$cleanFlag})
   
   ########################################
   createSlider<-function(colName, label, isInt){
-    if(colName %in% input$predictors){
-      v<-sliderParams(colName, isInt)
-      s<-sliderInput(colName, colName, min=v$lo, max=v$hi, value=round(v$m,digits=2), step = v$step)
-      s
+    if(length(input$predictors)>1){
+      if(colName %in% input$predictors){
+        v<-sliderParams(colName, isInt)
+        s<-sliderInput(colName, colName, min=v$lo, max=v$hi, value=round(v$m,digits=2), step = v$step)
+        s
+      }
     }
   }
   
@@ -128,10 +146,45 @@ shinyServer(function(input, output, session)
   
   #########################################
   # Render Plots
-  
-  # Pairs plot
   output$pairsPlot <- renderPlot({
     print(pairsPlot (data.filter()))
   })
+  
+  #########################################
+  output$prediction<-renderPrint({
+    if(length(input$predictors) > 1){
+    rec<-test.record()
+    #assuming guassian.. may be incorrect
+    pred<-predict(logitModel(), newdata = rec, se.fit = T, type="response")
+    cat(paste("Probability Diabetic: ",round(pred$fit*100,digits=0),"%\n"))
+    }
+  })
+  
+  output$modelSummary<-renderPrint({
+    if(length(input$predictors) > 1){
+    summary(logitModel())
+    }
+  })
+  
+  
+  logitModel<-function(){
+    if(length(input$predictors > 1)){
+      model<-fitLogitModel(data.filter())
+      model
+    }
+  }
+  
+  test.record<-reactive({
+    if(length(input$predictors > 1)){
+      test<-list()
+      for(colName in input$predictors){
+        test[colName]<-input[[colName]]
+      }
+      test["test"]<-NA
+      testRec<-as.data.frame(test)
+      testRec
+    }
+  })
+  
   
 })
