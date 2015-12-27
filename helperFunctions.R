@@ -1,5 +1,10 @@
 library(GGally)
 
+#' Lod dataset
+#' 
+#' @param pimaLocal fullpath to filename
+#' @return data.frame
+#'
 loadData<-function(pimaLocal){
   #load pima indians data
   pimaUrl<-"http://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.data"
@@ -22,6 +27,13 @@ loadData<-function(pimaLocal){
   csvData
 }
 
+#' Filter dataset by selected predictors and clean flag
+#' 
+#' @param data data.frame
+#' @param selAttributes list of predictor names
+#' @param cleanFlag 1= clean 0=raw
+#' @return data.frame
+#'
 filterData<-function(data, selAttributes, cleanFlag){
   ind<-match(selAttributes,colnames(data))
   if(length(ind)>0){
@@ -35,6 +47,11 @@ filterData<-function(data, selAttributes, cleanFlag){
   }
 }
 
+#' Clean sets values that are 0 to NaN
+#' 
+#' @param data data.frame
+#' @return data.frame
+#'
 cleanData<-function(data){
   colNames<-colnames(data)
   for(col in colNames) {
@@ -46,6 +63,11 @@ cleanData<-function(data){
 }
 
 ############PLOTS##############
+#' Create ggpairs plot (not used)
+#' 
+#' @param inData data.frame
+#' @return plot
+#'
 pairsPlotCorr <- function (inData) {
   nPredictors<-dim(inData)[2]-1
   if(nPredictors>1){
@@ -64,6 +86,11 @@ pairsPlotCorr <- function (inData) {
   }
 }
 
+#' Create pairsPlot
+#' 
+#' @param inData data.frame
+#' @return plot
+#'
 pairsPlot <- function (inData) {
   nPredictors<-dim(inData)[2]-1
   if(nPredictors>1){
@@ -89,6 +116,11 @@ pairsPlot <- function (inData) {
   
 }
 
+#' Fit logistic regression
+#' 
+#' @param inData data.frame
+#' @return model
+#'
 fitLogitModel<-function(inData){
   nPredictors<-dim(inData)[2]-1
   if(nPredictors > 0){
